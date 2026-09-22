@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -21,11 +19,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.revlogix.app.data.local.AppDatabase
-import com.revlogix.app.data.repository.UserRepository
-import com.revlogix.app.data.repository.VehicleRepository
+import com.revlogix.app.data.repository.*
 import com.revlogix.app.ui.navigation.Screen
 import com.revlogix.app.ui.screens.*
 import com.revlogix.app.ui.theme.RevLogixTheme
+import com.revlogix.app.ui.viewmodel.CustomPartViewModel
+import com.revlogix.app.ui.viewmodel.FuelExpenseViewModel
+import com.revlogix.app.ui.viewmodel.MaintenanceViewModel
 import com.revlogix.app.ui.viewmodel.VehicleViewModel
 
 class MainActivity : ComponentActivity() {
@@ -33,9 +33,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            RevLogixTheme {
-                RevLogixApp()
-            }
+            RevLogixTheme { RevLogixApp() }
         }
     }
 }
@@ -44,21 +42,49 @@ class MainActivity : ComponentActivity() {
 fun RevLogixApp() {
     val navController = rememberNavController()
     val items = listOf(Screen.Home, Screen.Fuel, Screen.Service, Screen.Build, Screen.Settings)
-
     val context = LocalContext.current
     val database = remember { AppDatabase.getDatabase(context) }
+
     val vehicleRepository = remember { VehicleRepository(database.vehicleDao()) }
     val userRepository = remember { UserRepository(database.userDao()) }
+    val fuelRepository = remember { FuelRepository(database.fuelLogDao()) }
+    val expenseRepository = remember { ExpenseRepository(database.expenseDao()) }
+    val maintenanceRepository = remember { MaintenanceRepository(database.maintenanceRecordDao()) }
+    val customPartRepository = remember { CustomPartRepository(database.customPartDao()) }
+
     val vehicleViewModel: VehicleViewModel = viewModel(
         factory = VehicleViewModel.provideFactory(vehicleRepository, userRepository)
     )
+    val vehicles by vehicleViewModel.vehicles.collectAsState()
+    val activeVehicle = vehicles.firstOrNull()
+    val activeVehicleId = activeVehicle?.vehicleId
+
+    val fuelExpenseViewModel: FuelExpenseViewModel? = if (activeVehicleId != null) {
+        viewModel(
+            key = "fuel_$activeVehicleId",
+            factory = FuelExpenseViewModel.provideFactory(fuelRepository, expenseRepository, activeVehicleId)
+        )
+    } else null
+
+    val maintenanceViewModel: MaintenanceViewModel? = if (activeVehicleId != null) {
+        viewModel(
+            key = "maint_$activeVehicleId",
+            factory = MaintenanceViewModel.provideFactory(maintenanceRepository, activeVehicleId, activeVehicle.currentOdometer)
+        )
+    } else null
+
+    val customPartViewModel: CustomPartViewModel? = if (activeVehicleId != null) {
+        viewModel(
+            key = "parts_$activeVehicleId",
+            factory = CustomPartViewModel.provideFactory(customPartRepository, activeVehicleId)
+        )
+    } else null
 
     Scaffold(
         bottomBar = {
             NavigationBar {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
-
                 items.forEach { screen ->
                     val icon = when (screen) {
                         Screen.Home -> Icons.Filled.Home
@@ -89,9 +115,9 @@ fun RevLogixApp() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Home.route) { HomeScreen(viewModel = vehicleViewModel) }
-            composable(Screen.Fuel.route) { FuelScreen() }
-            composable(Screen.Service.route) { ServiceScreen() }
-            composable(Screen.Build.route) { BuildLedgerScreen() }
+            composable(Screen.Fuel.route) { FuelScreen(viewModel = fuelExpenseViewModel) }
+            composable(Screen.Service.route) { ServiceScreen(viewModel = maintenanceViewModel) }
+            composable(Screen.Build.route) { BuildLedgerScreen(viewModel = customPartViewModel) }
             composable(Screen.Settings.route) { SettingsScreen() }
         }
     }
