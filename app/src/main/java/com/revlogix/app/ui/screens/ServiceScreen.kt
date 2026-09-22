@@ -36,6 +36,7 @@ fun ServiceScreen(viewModel: MaintenanceViewModel?, modifier: Modifier = Modifie
     }
 
     Scaffold(
+        topBar = { TopAppBar(title = { Text("Maintenance") }) },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddDialog = true }) {
                 Icon(Icons.Filled.Add, contentDescription = "Add maintenance record")
@@ -109,13 +110,7 @@ private fun AddMaintenanceDialog(
         },
         confirmButton = {
             TextButton(onClick = {
-                onConfirm(
-                    type,
-                    odometer.toIntOrNull() ?: 0,
-                    cost.toDoubleOrNull() ?: 0.0,
-                    months.toIntOrNull(),
-                    dueOdo.toIntOrNull()
-                )
+                onConfirm(type, odometer.toIntOrNull() ?: 0, cost.toDoubleOrNull() ?: 0.0, months.toIntOrNull(), dueOdo.toIntOrNull())
             }) { Text("Save") }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }

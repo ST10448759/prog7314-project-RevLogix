@@ -23,6 +23,7 @@ fun HomeScreen(
     var showAddDialog by remember { mutableStateOf(false) }
 
     Scaffold(
+        topBar = { TopAppBar(title = { Text("My Vehicles") }) },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddDialog = true }) {
                 Icon(Icons.Filled.Add, contentDescription = "Add vehicle")
@@ -41,9 +42,7 @@ fun HomeScreen(
                 modifier = modifier.fillMaxSize().padding(innerPadding).padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(vehicles) { vehicle ->
-                    VehicleCard(vehicle)
-                }
+                items(vehicles) { vehicle -> VehicleCard(vehicle) }
             }
         }
     }
@@ -102,8 +101,6 @@ private fun AddVehicleDialog(
                 onConfirm(make, model, year.toIntOrNull() ?: 0, bodyStyle, registration, odometer.toIntOrNull() ?: 0)
             }) { Text("Save") }
         },
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
-        }
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
     )
 }

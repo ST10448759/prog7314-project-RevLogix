@@ -28,6 +28,7 @@ fun BuildLedgerScreen(viewModel: CustomPartViewModel?, modifier: Modifier = Modi
     val grouped = parts.groupBy { it.category }
 
     Scaffold(
+        topBar = { TopAppBar(title = { Text("Build Ledger") }) },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddDialog = true }) {
                 Icon(Icons.Filled.Add, contentDescription = "Add part")
@@ -45,10 +46,7 @@ fun BuildLedgerScreen(viewModel: CustomPartViewModel?, modifier: Modifier = Modi
             ) {
                 grouped.forEach { (category, categoryParts) ->
                     item {
-                        Text(
-                            "$category (${categoryParts.size})",
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                        Text("$category (${categoryParts.size})", style = MaterialTheme.typography.titleMedium)
                     }
                     items(categoryParts) { part -> PartCard(part) }
                 }

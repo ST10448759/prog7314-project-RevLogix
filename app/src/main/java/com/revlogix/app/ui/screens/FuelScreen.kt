@@ -32,6 +32,7 @@ fun FuelScreen(viewModel: FuelExpenseViewModel?, modifier: Modifier = Modifier) 
     val economy by viewModel.averageEconomy.collectAsState()
 
     Scaffold(
+        topBar = { TopAppBar(title = { Text("Fuel & Expenses") }) },
         floatingActionButton = {
             FloatingActionButton(onClick = { if (tab == 0) showAddFuel = true else showAddExpense = true }) {
                 Icon(Icons.Filled.Add, contentDescription = "Add")
