@@ -26,7 +26,7 @@ Commits are made incrementally per feature throughout development. A GitHub Acti
 Unit tests cover the core business logic: `HealthScoreCalculatorTest` and `FuelEconomyCalculatorTest`, located under `app/src/test/`.
 
 ## Demo Video
-[Link to be added]
+(https://youtu.be/IoQ9IfjzREs)
 
 ## AI Usage
-See the AI Sub-Report for details on where generative AI assisted development.
+See the AI Sub-Report for details on where generative AI assisted development. Submitted on Arc and in this repository. 
