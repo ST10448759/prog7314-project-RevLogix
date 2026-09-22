@@ -23,18 +23,30 @@ import com.revlogix.app.data.repository.*
 import com.revlogix.app.ui.navigation.Screen
 import com.revlogix.app.ui.screens.*
 import com.revlogix.app.ui.theme.RevLogixTheme
-import com.revlogix.app.ui.viewmodel.CustomPartViewModel
-import com.revlogix.app.ui.viewmodel.FuelExpenseViewModel
-import com.revlogix.app.ui.viewmodel.MaintenanceViewModel
-import com.revlogix.app.ui.viewmodel.VehicleViewModel
+import com.revlogix.app.ui.viewmodel.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            RevLogixTheme { RevLogixApp() }
+            RevLogixTheme { RevLogixRoot() }
         }
+    }
+}
+
+@Composable
+fun RevLogixRoot() {
+    val context = LocalContext.current
+    val database = remember { AppDatabase.getDatabase(context) }
+    val userRepository = remember { UserRepository(database.userDao()) }
+    val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.provideFactory(userRepository))
+    val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
+
+    if (!isLoggedIn) {
+        LoginScreen(onSignIn = { authViewModel.signInWithSso() })
+    } else {
+        RevLogixApp()
     }
 }
 
