@@ -46,12 +46,12 @@ fun RevLogixRoot() {
     if (!isLoggedIn) {
         LoginScreen(onSignIn = { authViewModel.signInWithSso() })
     } else {
-        RevLogixApp()
+        RevLogixApp(onSignOut = { authViewModel.signOut() })
     }
 }
 
 @Composable
-fun RevLogixApp() {
+fun RevLogixApp(onSignOut: () -> Unit) {
     val navController = rememberNavController()
     val items = listOf(Screen.Home, Screen.Fuel, Screen.Service, Screen.Build, Screen.Settings)
     val context = LocalContext.current
@@ -92,6 +92,10 @@ fun RevLogixApp() {
         )
     } else null
 
+    val settingsViewModel: SettingsViewModel = viewModel(
+        factory = SettingsViewModel.provideFactory(database.userDao())
+    )
+
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -130,7 +134,7 @@ fun RevLogixApp() {
             composable(Screen.Fuel.route) { FuelScreen(viewModel = fuelExpenseViewModel) }
             composable(Screen.Service.route) { ServiceScreen(viewModel = maintenanceViewModel) }
             composable(Screen.Build.route) { BuildLedgerScreen(viewModel = customPartViewModel) }
-            composable(Screen.Settings.route) { SettingsScreen() }
+            composable(Screen.Settings.route) { SettingsScreen(viewModel = settingsViewModel, onSignOut = onSignOut) }
         }
     }
 }
