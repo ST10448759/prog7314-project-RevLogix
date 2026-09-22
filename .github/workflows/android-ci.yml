@@ -26,3 +26,4 @@ jobs:
 
       - name: Build debug APK
         run: ./gradlew assembleDebug
+# Trigger workflow run
