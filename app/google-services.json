@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "665457606957",
+    "project_id": "revlogix-126a8",
+    "storage_bucket": "revlogix-126a8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665457606957:android:7457ca53ba6673d12993a4",
+        "android_client_info": {
+          "package_name": "com.revlogix.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbe_PXWb9LL3mjkpef5zJd3E0XVHZtvAg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

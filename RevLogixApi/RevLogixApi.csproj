@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.15" />
+    <!-- Validates the Firebase ID token sent by the Android app -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+    <!-- NoSQL database (Cloud Firestore) -->
+    <PackageReference Include="Google.Cloud.Firestore" Version="3.8.0" />
+    <!-- Blob storage (Cloud Storage bucket used by Firebase Storage) -->
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="4.10.0" />
+    <!-- Sends push notifications through Firebase Cloud Messaging -->
+    <PackageReference Include="FirebaseAdmin" Version="3.0.0" />
+  </ItemGroup>
+
+</Project>

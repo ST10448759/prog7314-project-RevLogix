@@ -1,0 +1,27 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# .NET API build output and old local database
+RevLogixApi/bin/
+RevLogixApi/obj/
+RevLogixApi/*.db
+
+# Secrets - never commit these
+keystore.properties
+*.jks
+*.keystore
+*service-account*.json
+RevLogixApi/appsettings.Secrets.json
